@@ -1,7 +1,17 @@
 import { Column, DataType, Table } from "sequelize-typescript";
 import BaseModel from "./base.model";
+import { RiskLevel } from "../../core/entities/stock.entity";
 
-type RiskLevel = "low" | "moderate" | "high";
+export type StockModelAttributes = {
+  id: string;
+  closePrice: number;
+  sector: string;
+  exchange: string;
+  riskLevel: RiskLevel;
+  revenue: number;
+  vector: number[];
+  updatedAt: Date;
+};
 
 @Table({
   tableName: "stock",
@@ -9,7 +19,7 @@ type RiskLevel = "low" | "moderate" | "high";
   paranoid: true,
   deletedAt: "deleted_at",
 })
-export default class StockModel extends BaseModel {
+export default class StockModel extends BaseModel<StockModelAttributes> {
   @Column({
     allowNull: false,
     type: DataType.DECIMAL(18, 6),

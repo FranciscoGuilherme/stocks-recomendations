@@ -2,13 +2,23 @@ import { Column, DataType, HasMany, Table } from "sequelize-typescript";
 import BaseModel from "./base.model";
 import StockModel from "./stock.model";
 
+export type UserModelAttributes = {
+  id: string;
+  age: number;
+  riskTolerance: string;
+  investmentGoal: string;
+  preferredSectors: string[];
+  vector: number[];
+  updatedAt: Date;
+};
+
 @Table({
   tableName: "app_user",
   timestamps: false,
   paranoid: true,
   deletedAt: "deleted_at",
 })
-export default class UserModel extends BaseModel {
+export default class UserModel extends BaseModel<UserModelAttributes> {
   @Column({ allowNull: false, type: DataType.INTEGER })
   declare age: number;
 
