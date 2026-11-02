@@ -1,9 +1,9 @@
 import EntityInterface from "./entity.interface";
 
-export default interface RepositoryInterface<T extends EntityInterface> {
-  findAll(): Promise<T[]>;
-  findById(id: string): Promise<T | null>;
-  create(item: T): Promise<T>;
-  update(id: string, item: Partial<T>): Promise<T | null>;
+export default interface RepositoryInterface<E extends EntityInterface> {
+  findAll(): Promise<E[]>;
+  findById(id: string): Promise<E | null>;
+  create(item: E): Promise<E>;
+  update(id: string, item: Partial<E>): Promise<E | null>;
   delete(id: string): Promise<boolean>;
 }
