@@ -1,6 +1,6 @@
 import { Column, DataType, Model, PrimaryKey } from "sequelize-typescript";
 
-export default class BaseModel extends Model {
+export default class BaseModel<T extends {}> extends Model<T> {
   @PrimaryKey
   @Column({ allowNull: false, type: DataType.UUID })
   declare id: string;
