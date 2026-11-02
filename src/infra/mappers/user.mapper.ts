@@ -1,23 +1,40 @@
 import UniqueEntityId from "../../core/@shared/value-objects/unique-entity-id.vo";
 import User from "../../core/entities/user.entity";
-import UserModel from "../model/user.model";
+import UserModel, { UserModelAttributes } from "../model/user.model";
+import MapperInterface from "./mapper.interface";
 import StockMapper from "./stock.mapper";
 
-export default class UserMapper {
-  static CollectionToEntities(users: UserModel[]): User[] {
+export default class UserMapper implements MapperInterface<User, UserModel> {
+  static Mapper() {
+    return new UserMapper();
+  }
+
+  collectionToEntities(users: UserModel[]): User[] {
     return [];
   }
 
-  static ToEntity(user: UserModel): User {
+  toEntity(user: UserModel): User {
     return new User(
       {
         age: user.age,
         investmentGoal: user.investmentGoal,
         preferredSectors: user.preferredSectors,
         riskTolerance: user.riskTolerance,
-        stocks: StockMapper.,
+        stocks: StockMapper.Mapper().collectionToEntities(user.stocks),
       },
       new UniqueEntityId(user.id),
     );
+  }
+
+  toModelAttributes(user: User): UserModelAttributes {
+    return {
+      id: user.id,
+      age: user.age,
+      riskTolerance: user.riskTolerance,
+      investmentGoal: user.investmentGoal,
+      preferredSectors: user.preferredSectors,
+      vector: user.stocks.map((stock) => stock.price),
+      updatedAt: new Date(),
+    };
   }
 }
