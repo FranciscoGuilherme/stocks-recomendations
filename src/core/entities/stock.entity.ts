@@ -2,6 +2,8 @@ import Entity from "../@shared/entity";
 import EntityInterface from "../@shared/entity.interface";
 import UniqueEntityId from "../@shared/value-objects/unique-entity-id.vo";
 
+export type RiskLevel = "low" | "moderate" | "high";
+
 type StockProps = {
   price: number;
   sector: string;
@@ -17,8 +19,9 @@ export default class Stock
   private _price: number;
   private _sector: string;
   private _exchange: string;
-  private _riskLevel: string;
+  private _riskLevel: RiskLevel;
   private _revenue: number;
+  private _vector: number[] = [];
 
   public static readonly allowedRiskLevels = ["high", "moderate", "low"];
 
@@ -28,7 +31,7 @@ export default class Stock
     this._price = props.price;
     this._sector = props.sector;
     this._exchange = props.exchange;
-    this._riskLevel = props.riskLevel;
+    this._riskLevel = props.riskLevel as RiskLevel;
     this._revenue = props.revenue;
   }
 
@@ -44,12 +47,16 @@ export default class Stock
     return this._exchange;
   }
 
-  get riskLevel(): string {
+  get riskLevel(): RiskLevel {
     return this._riskLevel;
   }
 
   get revenue(): number {
     return this._revenue;
+  }
+
+  get vector(): number[] {
+    return this._vector;
   }
 
   private validate(): void {
