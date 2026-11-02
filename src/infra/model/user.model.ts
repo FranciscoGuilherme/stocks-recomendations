@@ -1,6 +1,13 @@
-import { Column, DataType, HasMany, Table } from "sequelize-typescript";
+import {
+  BelongsToMany,
+  Column,
+  DataType,
+  HasMany,
+  Table,
+} from "sequelize-typescript";
 import BaseModel from "./base.model";
 import StockModel from "./stock.model";
+import PortfolioAssetsModel from "./portfolio-assets.model";
 
 export type UserModelAttributes = {
   id: string;
@@ -9,6 +16,7 @@ export type UserModelAttributes = {
   investmentGoal: string;
   preferredSectors: string[];
   vector: number[];
+  createdAt: Date;
   updatedAt: Date;
 };
 
@@ -38,8 +46,14 @@ export default class UserModel extends BaseModel<UserModelAttributes> {
   @Column({ allowNull: false, type: DataType.TSVECTOR })
   declare vector: number[];
 
-  @HasMany(() => StockModel)
+  @HasMany(() => PortfolioAssetsModel, { foreignKey: "userId" })
+  declare portfolioAssets: PortfolioAssetsModel[];
+
+  @BelongsToMany(() => StockModel, () => PortfolioAssetsModel)
   declare stocks: StockModel[];
+
+  @Column({ allowNull: false, type: DataType.DATE, field: "created_at" })
+  declare createdAt: Date;
 
   @Column({ type: DataType.DATE, field: "updated_at" })
   declare updatedAt: Date;
