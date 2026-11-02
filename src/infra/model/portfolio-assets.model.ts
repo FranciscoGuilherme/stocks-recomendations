@@ -3,13 +3,20 @@ import BaseModel from "./base.model";
 import StockModel from "./stock.model";
 import UserModel from "./user.model";
 
+export type PortfolioAssetsModelAttributes = {
+  userId: string;
+  stockId: string;
+  quantity: number;
+  updatedAt: Date;
+};
+
 @Table({
   tableName: "portfolio_assets",
   timestamps: false,
   paranoid: true,
   deletedAt: "deleted_at",
 })
-export default class PortfolioAssetsModel extends BaseModel {
+export default class PortfolioAssetsModel extends BaseModel<PortfolioAssetsModelAttributes> {
   @ForeignKey(() => UserModel)
   @Column({ allowNull: false, type: DataType.UUID, field: "user_id" })
   declare userId: string;
