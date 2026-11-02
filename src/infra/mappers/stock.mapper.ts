@@ -20,6 +20,7 @@ export default class StockMapper implements MapperInterface<Stock, StockModel> {
         exchange: stock.exchange,
         riskLevel: stock.riskLevel,
         revenue: stock.revenue,
+        vector: stock.vector,
       },
       new UniqueEntityId(stock.id),
     );
@@ -34,6 +35,7 @@ export default class StockMapper implements MapperInterface<Stock, StockModel> {
       riskLevel: stock.riskLevel,
       revenue: stock.revenue,
       vector: stock.vector,
+      createdAt: new Date(),
       updatedAt: new Date(),
     };
   }

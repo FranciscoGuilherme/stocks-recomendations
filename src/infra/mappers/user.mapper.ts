@@ -21,6 +21,7 @@ export default class UserMapper implements MapperInterface<User, UserModel> {
         preferredSectors: user.preferredSectors,
         riskTolerance: user.riskTolerance,
         stocks: StockMapper.Mapper().collectionToEntities(user.stocks),
+        vector: user.vector,
       },
       new UniqueEntityId(user.id),
     );
@@ -33,7 +34,8 @@ export default class UserMapper implements MapperInterface<User, UserModel> {
       riskTolerance: user.riskTolerance,
       investmentGoal: user.investmentGoal,
       preferredSectors: user.preferredSectors,
-      vector: user.stocks.map((stock) => stock.price),
+      vector: user.vector,
+      createdAt: new Date(),
       updatedAt: new Date(),
     };
   }
