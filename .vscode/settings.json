@@ -1,4 +1,12 @@
 {
+  "conventionalCommits.scopes": [
+    "project",
+    "domain",
+    "config",
+    "infra",
+    "docs",
+    "test"
+  ],
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.rulers": [80],
