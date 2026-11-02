@@ -10,6 +10,7 @@ type StockProps = {
   exchange: string;
   riskLevel: string;
   revenue: number;
+  vector: number[];
 };
 
 export default class Stock

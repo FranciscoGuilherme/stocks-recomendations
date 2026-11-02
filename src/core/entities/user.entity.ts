@@ -9,6 +9,7 @@ type UserProps = {
   investmentGoal: string;
   preferredSectors: string[];
   stocks?: Stock[];
+  vector: number[];
 };
 
 export class UserId extends UniqueEntityId {}
@@ -19,6 +20,7 @@ export default class User extends Entity<UserProps> implements EntityInterface {
   private _investmentGoal: string;
   private _preferredSectors: string[];
   private _stocks: Stock[];
+  private _vector: number[] = [];
 
   constructor(props: UserProps, id?: UniqueEntityId) {
     super(props, id);
@@ -27,6 +29,7 @@ export default class User extends Entity<UserProps> implements EntityInterface {
     this._investmentGoal = props.investmentGoal;
     this._preferredSectors = props.preferredSectors;
     this._stocks = props.stocks || [];
+    this._vector = props.vector || [];
   }
 
   get age(): number {
@@ -47,5 +50,9 @@ export default class User extends Entity<UserProps> implements EntityInterface {
 
   get stocks(): Stock[] {
     return this._stocks;
+  }
+
+  get vector(): number[] {
+    return this._vector;
   }
 }
