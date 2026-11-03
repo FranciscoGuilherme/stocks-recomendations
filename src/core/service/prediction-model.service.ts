@@ -23,25 +23,26 @@ type ModelParameters = {
 
 export default class PredictionModelService {
   private model: tf.Sequential;
-  private context: Context;
+  private context!: Context;
 
   constructor(
-    private readonly trainData: { users: User[]; stocks: Stock[] },
     private readonly eventDispatcher: EventDispatcherInterface<EventInterface>,
   ) {
-    this.context = new Context({
-      users: this.trainData.users,
-      stocks: this.trainData.stocks,
-    });
+    this.model = tf.sequential();
   }
 
   public recommend(user: User) {
-    if (!this.model) {
+    if (this.model.layers.length === 0) {
       throw new Error("Model not created");
     }
 
-    const userVector = this.encodeUser(user);
-    const inputs = [];
+    const userVector = this.encodeUser(user).dataSync();
+    // TODO: resgatar as acoes mais parecidas com as acoes do usuario e criar o input para o modelo
+    // nao sao dados de treino, mas sim dados de recomendacao, entao nao ha label
+    const stocks = [];
+    const inputs = stocks.map((stock: Stock) => {
+      return [...userVector, ...stock.vector];
+    });
     const inputsTensor = tf.tensor2d(inputs);
     const predictions = this.model.predict(inputsTensor);
 
@@ -54,21 +55,18 @@ export default class PredictionModelService {
     // TODO: finalizar as recomendações e o rank
   }
 
-  async trainModel(): Promise<void> {
-    if (!this.model) {
-      throw new Error("Model not created");
-    }
-    const trainData = await this.createTrainingData(
-      this.trainData.users,
-      this.trainData.stocks,
-    );
+  async trainModel(users: User[], stocks: Stock[]): Promise<void> {
+    this.context = new Context({
+      users: users,
+      stocks: stocks,
+    });
+    const trainData = await this.createTrainingData(users, stocks);
     await this.configureNeuralNet(trainData);
     const event = new PredictionCalculatedEvent();
     this.eventDispatcher.notify(event);
   }
 
   private async configureNeuralNet(trainData: ModelParameters): Promise<void> {
-    this.model = tf.sequential();
     this.model.add(
       tf.layers.dense({
         inputShape: [trainData.inputDimention],
@@ -90,7 +88,7 @@ export default class PredictionModelService {
       batchSize: 32,
       shuffle: true,
       callbacks: {
-        onEpochEnd: (epoch: number, logs: tf.Logs) => {
+        onEpochEnd: (epoch: number, logs: tf.Logs | undefined) => {
           console.log("Epoch");
         },
       },
@@ -101,8 +99,8 @@ export default class PredictionModelService {
     users: User[],
     stocks: Stock[],
   ): Promise<ModelParameters> {
-    const inputs = [];
-    const labels = [];
+    var inputs: number[] = [];
+    var labels: boolean[] = [];
 
     users
       .filter((user: User) => user.stocks.length)
