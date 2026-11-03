@@ -38,13 +38,13 @@ type ContextProps = {
 
 export default class Context extends AggregateRoot<ContextProps> {
   private readonly _dimensions: number;
-  private readonly _userContext: {
+  private readonly _userContext!: {
     ages: number[];
     maxAge: number;
     minAge: number;
   };
 
-  private readonly _stockContext: {
+  private readonly _stockContext!: {
     prices: number[];
     maxPrice: number;
     minPrice: number;
@@ -59,7 +59,7 @@ export default class Context extends AggregateRoot<ContextProps> {
     minRevenue: number;
   };
 
-  private readonly _relatedContext: {
+  private readonly _relatedContext!: {
     ageSums: Record<string, number>;
     ageCounts: Record<string, number>;
     ageAverages: Record<string, number>;
@@ -106,12 +106,20 @@ export default class Context extends AggregateRoot<ContextProps> {
     this._stockContext.revenues = stocks.map((stock: Stock) => stock.revenue);
     this._stockContext.maxRevenue = Math.max(...this._stockContext.revenues);
     this._stockContext.minRevenue = Math.min(...this._stockContext.revenues);
-    this._stockContext.sectors = Array.from(
-      new Set(stocks.map((stock: Stock) => stock.sector)),
-    );
-    this._stockContext.exchanges = Array.from(
-      new Set(stocks.map((stock: Stock) => stock.exchange)),
-    );
+    this._stockContext.sectors = [
+      "Basic Materials",
+      "Communication Services",
+      "Consumer Cyclical",
+      "Consumer Defensive",
+      "Energy",
+      "Financial Services",
+      "Healthcare",
+      "Industrials",
+      "Real Estate",
+      "Technology",
+      "Utilities",
+    ];
+    this._stockContext.exchanges = ["BTS", "NGM", "NMS", "NYQ"];
     this._stockContext.riskLevels = Stock.allowedRiskLevels;
     this._stockContext.sectorsIndex = Object.fromEntries(
       this._stockContext.sectors.map((sector, index) => [sector, index]),
